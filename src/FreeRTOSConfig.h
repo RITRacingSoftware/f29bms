@@ -78,8 +78,11 @@ configMAX_PRIORITIES - 1. */
 
 /* Run time stats gathering configuration options. */
 unsigned long ulGetRunTimeCounterValue( void ); /* Prototype of function that returns run time counter. */
-void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initialises the run time counter. */
-#define configGENERATE_RUN_TIME_STATS			0
+extern void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initialises the run time counter. */
+extern volatile unsigned long ulHighFrequencyTimerTicks;
+#define configGENERATE_RUN_TIME_STATS			1
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS	( 1000 ) /* Above and Below Must be defined in order to generate run time stats */
+#define portGET_RUN_TIME_COUNTER_VALUE()		ulHighFrequencyTimerTicks
 
 /* Co-routine related configuration options. */
 #define configUSE_CO_ROUTINES 					0
@@ -89,7 +92,7 @@ void vConfigureTimerForRunTimeStats( void );	/* Prototype of function that initi
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	0
+#define configUSE_STATS_FORMATTING_FUNCTIONS	1 // 1 for run time stats to be available
 
 /* Enables the test whereby a stack larger than the total heap size is
 requested. */

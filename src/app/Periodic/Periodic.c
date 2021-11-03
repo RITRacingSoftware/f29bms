@@ -15,14 +15,27 @@
 #include "StatusLed.h"
 #include "TempConverter.h"
 #include "TempModel.h"
+#include "semphr.h"
 
 // the global battery model!
 static BatteryModel_t battery_model;
 // the global temperature model!
 static TempModel_t temp_model;
 
+// mutex locks for thread safetey, one for battery and temp
+// Locks indefinitely until the process is done
+// Lock before function and unlock after function
+// With &battery_model and &temp_model to maintain task safety
+static SemaphoreHandle_t mutex_bat; 
+static SemaphoreHandle_t mutex_temp;
+
+
 void Periodic_init(void)
 {
+    // Create mutexes on init
+    mutex_bat = xSemaphoreCreateMutex();
+    mutex_temp = xSemaphoreCreateMutex();
+
     for (int i = 0; i < NUM_SERIES_CELLS; i++)
     {
         // start with a cell voltage that shouldn't cause any errors
@@ -43,41 +56,68 @@ void Periodic_init(void)
 
 void Periodic_1Hz(void)
 {
+    // Take the mutex (lock)
+    xSemaphoreTake(mutex_bat, portMAX_DELAY);
     // Request or reject charging
     ChargeMonitor_1Hz(&battery_model);
-
+    // Unlock
+    xSemaphoreGive(mutex_bat);
+    
     CAN_1Hz();
 }
 
 void Periodic_10Hz(void)
 {
     // update information from the outside world
+    xSemaphoreTake(mutex_bat, portMAX_DELAY);
     SlaveInterface_read_cell_info(&battery_model);
+    xSemaphoreGive(mutex_bat);
+
+    xSemaphoreTake(mutex_temp, portMAX_DELAY);
     SlaveInterface_read_temperature_info(&temp_model);
+    xSemaphoreGive(mutex_temp);
 
     // convert from thermistor voltage probe readings to temperatures
+    xSemaphoreTake(mutex_temp, portMAX_DELAY);
     TempConverter_convert(&temp_model);
-   
-    // check the new slave board readings for errors
-    PackMonitor_validate_battery_model_10Hz(&battery_model);
-    PackMonitor_validate_temp_model_10Hz(&temp_model);
+    xSemaphoreGive(mutex_temp);
 
+    // check the new slave board readings for errors
+    xSemaphoreTake(mutex_bat, portMAX_DELAY);
+    PackMonitor_validate_battery_model_10Hz(&battery_model);
+    xSemaphoreGive(mutex_bat);
+
+    xSemaphoreTake(mutex_temp, portMAX_DELAY);
+    PackMonitor_validate_temp_model_10Hz(&temp_model);
+    xSemaphoreGive(mutex_temp);
 
     // stage/unstage cell balancing based on cell voltage differences
+    xSemaphoreTake(mutex_bat, portMAX_DELAY);
     CellBalancer_stage_cell_draining(&battery_model);
+    xSemaphoreGive(mutex_bat);
 
     // for (int i = 0; i < NUM_SERIES_CELLS; i++)
     // if (i == 2 || i == 4) battery_model.cells[i].is_draining = 1; else battery_model.cells[i].is_draining = 0;
     // transmit new drain requests to slave board chips
+    xSemaphoreTake(mutex_bat, portMAX_DELAY);
     SlaveInterface_request_cell_draining(&battery_model);
+    xSemaphoreGive(mutex_bat);
 
     // update the bounds on State of Charge based on average pack voltage
+    xSemaphoreTake(mutex_bat, portMAX_DELAY);
+    xSemaphoreTake(mutex_temp, portMAX_DELAY);
     SOCestimator_voltage_threshold_update_10Hz(&battery_model, &temp_model);
+    xSemaphoreGive(mutex_bat);
+    xSemaphoreGive(mutex_temp);
 
     // statuse LED blink algorithm iteration
     StatusLed_10Hz();
 
+    xSemaphoreTake(mutex_bat, portMAX_DELAY);
+    xSemaphoreTake(mutex_temp, portMAX_DELAY);
     CAN_10Hz(&battery_model, &temp_model);
+    xSemaphoreGive(mutex_bat);
+    xSemaphoreGive(mutex_temp);
 }
 
 void Periodic_1kHz(void)
