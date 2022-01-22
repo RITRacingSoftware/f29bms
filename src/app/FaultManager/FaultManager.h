@@ -45,6 +45,14 @@ typedef enum
     FaultCode_OVER_TEMPERATURE,
     // Draining was requested for a cell and was not observed.
     FaultCode_DRAIN_FAILURE,
+
+    /**
+     * SHRIYA TODO- add a new fault here called FaultCode_MANUAL
+     */
+
+    //Manual Fault 
+    FaultCode_MANUAL,
+
     // Number of enumerations
     FaultCode_NUM
 } FaultCode_e;

@@ -92,6 +92,11 @@
 #define DRAIN_FAILURE_TOLERANCE_MS NO_SHUTDOWN // not implemented
 
 /**
+ * SHRIYA TODO- add a #define here for manual fault tolerance. Should be 1 so it shuts down the car immediately
+ */
+ #define MANUAL_FAULT_TOl 1 
+
+/**
  * MCU
  */
 #define MCU_VCC 3.3 // not used

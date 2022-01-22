@@ -44,6 +44,7 @@ BO_ 700 BmsFaultVector: 8 Bms
  SG_ BmsFaultVector_TEMPERATURE_IRRATIONAL: 8|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ BmsFaultVector_OVER_TEMPERATURE: 9|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ BmsFaultVector_DRAIN_FAILURE: 10|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BmsFaultVector_MANUAL_FAULT: 11|1@1+ (1,0) [0|1] "" Vector__XXX
 
 BO_ 701 BmsFaultAlert: 8 Bms
  SG_ BmsFaultAlert_code M : 0|6@1+ (1,0) [0|63] "" Vector__XXX
@@ -58,6 +59,7 @@ BO_ 701 BmsFaultAlert: 8 Bms
  SG_ BmsFaultAlert_irrational_temperature m8: 6|16@1+ (0.01,0) [-327.68|327.67] "V" Vector__XXX
  SG_ BmsFaultAlert_over_temperature m9: 6|16@1+ (0.01,0) [-327.68|327.67] "V" Vector__XXX
  SG_ BmsFaultAlert_failed_drain_cell m10: 6|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ BmsFaultAlert_manual_fault m11: 6|8@1+ (1,0) [0|255] "" Vector__XXX
 
 BO_ 702 BmsVoltages: 8 Bms
  SG_ BmsVoltages_mux M : 0|8@1+ (1,0) [0|255] "" Vector__XXX
@@ -319,6 +321,12 @@ BO_ 951 BmsRef: 8 Bms
  SG_ BmsRef_ref10 m1: 37|9@1+ (0.01,0) [0|5.12] "V" Vector__XXX
  SG_ BmsRef_ref11 m1: 46|9@1+ (0.01,0) [0|5.12] "V" Vector__XXX
 
-VAL_ 701 BmsFaultAlert_code 0 "FaultCode_SLAVE_COMM_CELLS" 1 "FaultCode_SLAVE_COMM_TEMPS" 2 "FaultCode_SLAVE_COMM_DRAIN_REQUEST" 3 "FaultCode_CURRENT_SENSOR_COMM" 4 "FaultCode_OVER_CURRENT" 5 "FaultCode_CELL_VOLTAGE_IRRATIONAL" 6 "FaultCode_CELL_VOLTAGE_DIFF" 7 "Faultcode_OUT_OF_JUICE" 8 "FaultCode_TEMPERATURE_IRRATIONAL" 9 "FaultCode_OVER_TEMP" 10 "FaultCode_DRAIN_FAILURE";
+BO_ 952 BmsManualFaultTrigger: 8 Bms
+ SG_ BmsManualFaultTrigger_set: 0|1@1+ (1,0) [0|1] "" Vector__XXX
+
+
+
+
+VAL_ 701 BmsFaultAlert_code 0 "FaultCode_SLAVE_COMM_CELLS" 1 "FaultCode_SLAVE_COMM_TEMPS" 2 "FaultCode_SLAVE_COMM_DRAIN_REQUEST" 3 "FaultCode_CURRENT_SENSOR_COMM" 4 "FaultCode_OVER_CURRENT" 5 "FaultCode_CELL_VOLTAGE_IRRATIONAL" 6 "FaultCode_CELL_VOLTAGE_DIFF" 7 "Faultcode_OUT_OF_JUICE" 8 "FaultCode_TEMPERATURE_IRRATIONAL" 9 "FaultCode_OVER_TEMP" 10 "FaultCode_DRAIN_FAILURE" 11 "FaultCode_MANUAL_FAULT";
 VAL_ 600 BmsStatus_ChargeState 0 "ChargeState_DISCONNECTED" 1 "ChargeState_CONNECTED_COMPLETE" 2 "ChargeState_CONNECTED_BALANCING" 3 "ChargeState_CONNECTED_CHARGING" 4 "ChargeState_CONNECTED_BALANCE_SENSING";
 VAL_ 950 BmsHardFaultIndicator_task 0 "unknown" 1 "task_1Hz" 2 "task_10Hz" 3 "task_1kHz" 4 "can_rx_task";

@@ -78,7 +78,14 @@ void FaultManager_set_fault_active(FaultCode_e code, void* data)
             case FaultCode_OVER_TEMPERATURE:
                 can_bus.bms_fault_alert.bms_fault_alert_over_temperature = f29bms_dbc_bms_fault_alert_bms_fault_alert_over_temperature_encode(*((float*)data));
                 break;
-                
+
+               /**
+                * SHRIYA TODO - add switch case for encoding manual fault
+                */
+            case ManualFault: 
+            
+                break 
+
             default:
                 // send garbage data
                 break;

@@ -31,6 +31,12 @@ extern SemaphoreHandle_t can_message_transmit_semaphore;
 */
 // extern can_obj_f29bms_dbc_h_t CAN_BUS;
 
+/**
+ * SHRIYA TODO- add manual fault to f29bms_dbc.dbc 
+ * -add a new CAN message to f29bms_dbc.dbc with field that is either 1 or 0, denoting if the manual fault will be set or not.
+ * -re-generate f29bms_dbc.c
+ */
+
 typedef struct
 {
     struct f29bms_dbc_bms_status_t bms_status;

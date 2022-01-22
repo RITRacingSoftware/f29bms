@@ -267,37 +267,58 @@ void CAN_process_recieved_messages(void)
         {
             case F29BMS_DBC_BMS_STATUS_FRAME_ID:
                 f29bms_dbc_bms_status_unpack(&can_bus.bms_status, (uint8_t*)&received_message.data, 8);
-
+                break
             case F29BMS_DBC_BMS_FAULT_VECTOR_FRAME_ID:
                 f29bms_dbc_bms_fault_vector_unpack(&can_bus.bms_fault_vector, (uint8_t*)&received_message.data, 8);
+                break
 
             case F29BMS_DBC_BMS_FAULT_ALERT_FRAME_ID:
                 f29bms_dbc_bms_fault_alert_unpack(&can_bus.bms_fault_alert, (uint8_t*)&received_message.data, 8);
+                break
 
             case F29BMS_DBC_BMS_VOLTAGES_FRAME_ID:
                 f29bms_dbc_bms_voltages_unpack(&can_bus.bms_voltages, (uint8_t*)&received_message.data, 8);
+                break
             
             case F29BMS_DBC_BMS_THERMISTOR_VOLTAGES_FRAME_ID:
                 f29bms_dbc_bms_thermistor_voltages_unpack(&can_bus.bms_thermistor_voltages, (uint8_t*)&received_message.data, 8);
+                break
             
             case F29BMS_DBC_BMS_TEMPERATURES_FRAME_ID:
                 f29bms_dbc_bms_temperatures_unpack(&can_bus.bms_temperatures, (uint8_t*)&received_message.data, 8);
+                break
 
             case F29BMS_DBC_BMS_DRAIN_STATUS_A_FRAME_ID:
                 f29bms_dbc_bms_drain_status_a_unpack(&can_bus.bms_drain_status_a, (uint8_t*)&received_message.data, 8);
+                break
 
             case F29BMS_DBC_BMS_DRAIN_STATUS_B_FRAME_ID:
                 f29bms_dbc_bms_drain_status_b_unpack(&can_bus.bms_drain_status_b, (uint8_t*)&received_message.data, 8);
+                break
 
             case F29BMS_DBC_BMS_CURRENT_FRAME_ID:
                 f29bms_dbc_bms_current_unpack(&can_bus.bms_current, (uint8_t*)&received_message.data, 8);
+                break
             
             case F29BMS_DBC_BMS_CHARGE_REQUEST_FRAME_ID:
                 f29bms_dbc_bms_charge_request_unpack(&can_bus.bms_charge_request, (uint8_t*)&received_message.data, 8);
+                break
 
             case F29BMS_DBC_BMS_REF_FRAME_ID:
                 f29bms_dbc_bms_ref_unpack(&can_bus.bms_ref, (uint8_t*)&received_message.data, 8);
+                break
             
+            /**
+             * SHRIYA TODO add switch case to set/clear manual fault if the manual fault setting CAN message is received.
+             */
+             
+             case F29BMS_DBC_MANFUALFAULT_CLEAR_ID: 
+                
+
+                break 
+
+
+
             default:
                 // printf("f29bms: unknown CAN id: %d\n", received_message.id);
                 break;

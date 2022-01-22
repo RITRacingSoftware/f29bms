@@ -62,6 +62,10 @@ void DriveMonitor_init(void)
     fault_tolerances[FaultCode_TEMPERATURE_IRRATIONAL]      = TEMPERATURE_IRRATIONAL_TOLERANCE_MS;
     fault_tolerances[FaultCode_DRAIN_FAILURE]               = DRAIN_FAILURE_TOLERANCE_MS;
 
+    /**
+     * SHRIYA TODO- add entry to array and tolerance for manual fault
+     */
+
     // ideally this would start low, but the FSAE rules say faults must latch
     // at the hardware level so we have to start with the true or the car will never drive
     is_driving_allowed = true;
