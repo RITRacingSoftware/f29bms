@@ -37,7 +37,10 @@
 #include "StatusLed.h"
 #include "TempConverter.h"
 #include "TempModel.h"
+#include "TaskWatchdog.h"
 #include "semphr.h"
+
+// #define DISABLE_WATCHDOG
 
 #define SEPHAMORE_WAIT 0
 
@@ -47,7 +50,7 @@ SemaphoreHandle_t can_message_transmit_semaphore;
 #define TASK_1Hz_NAME "task_1Hz"
 #define TASK_1Hz_PRIORITY (tskIDLE_PRIORITY + 1)
 #define TASK_1Hz_PERIOD_MS (1000)
-#define TASK_1Hz_STACK_SIZE_B (2000)
+#define TASK_1Hz_STACK_SIZE_B (1700)
 void TASK_1Hz(void *pvParameters)
 {
     (void) pvParameters;
@@ -56,6 +59,12 @@ void TASK_1Hz(void *pvParameters)
     for (;;)
     {
         Periodic_1Hz();
+        //Don't use watchdog if Disabled
+        #ifndef DISABLE_WATCHDOG
+            TaskWatchdog_pet(task_id_PERIODIC_1Hz);
+        #endif
+        
+        // printf("Task 1Hz\n");
         vTaskDelayUntil(&next_wake_time, TASK_1Hz_PERIOD_MS);
     }
 }
@@ -70,14 +79,19 @@ void task_10Hz(void *pvParameters)
     TickType_t next_wake_time = xTaskGetTickCount();
     for (;;)
     {
-
         Periodic_10Hz();
+        //Don't use watchdog if Disabled
+        #ifndef DISABLE_WATCHDOG
+            TaskWatchdog_pet(task_id_PERIODIC_10Hz);
+        #endif
+        // printf("Task 10Hz\n");
+        
         vTaskDelayUntil(&next_wake_time, TASK_10Hz_PERIOD_MS);
     }
 }
 
 #define TASK_1kHz_NAME "task_1kHz"
-#define TASK_1kHz_PRIORITY (tskIDLE_PRIORITY + 2)
+#define TASK_1kHz_PRIORITY (tskIDLE_PRIORITY + 3)
 #define TASK_1kHz_PERIOD_MS (1)
 #define TASK_1kHz_STACK_SIZE_B (1000)
 
@@ -88,6 +102,11 @@ void task_1kHz(void *pvParameters)
     for (;;)
     {
         Periodic_1kHz();
+        //Don't use watchdog if Disabled
+        #ifndef DISABLE_WATCHDOG
+            TaskWatchdog_pet(task_id_PERIODIC_1kHz);
+        #endif
+        //printf("Task 1kHz\n");
         vTaskDelayUntil(&next_wake_time, TASK_1kHz_PERIOD_MS);
     }
 }
@@ -127,6 +146,35 @@ void task_can_tx(void *pvParameters)
         }
     }
 }
+
+
+#define WATCHDOG_TASK_NAME ((signed char *) "watchdog_task")
+#define WATCHDOG_TASK_STACK_SIZE (256) //100
+#define WATCHDOG_TASK_PERIOD (1)
+#define WATCHDOG_TASK_PRIORITY (tskIDLE_PRIORITY+2) //Not sure 
+void watchdog_task(void *pvParameters)
+{
+    (void)pvParameters;
+	TickType_t next_wake_time = xTaskGetTickCount();
+	for(;;)
+	{
+        //Don't use watchdog if Disabled
+        #ifndef DISABLE_WATCHDOG
+		if (!TaskWatchdog_expired())
+		{
+			HAL_Watchdog_pet();
+
+			TaskWatchdog_tick(task_id_PERIODIC_1Hz);
+			TaskWatchdog_tick(task_id_PERIODIC_10Hz);
+            TaskWatchdog_tick(task_id_PERIODIC_1kHz);
+		}
+        #endif
+
+		vTaskDelayUntil(&next_wake_time, WATCHDOG_TASK_PERIOD);
+	}
+}
+
+
 
 #ifdef SIMULATION
 #include <signal.h>
@@ -179,7 +227,7 @@ int main(int argc, char** argv)
     HAL_Clock_init();
     
     HAL_Gpio_init(); // must happen before CAN
-    HAL_Uart_init();
+    // HAL_Uart_init();
     
     can_message_recieved_semaphore = xSemaphoreCreateBinary();
     xSemaphoreGive(can_message_recieved_semaphore);
@@ -193,11 +241,13 @@ int main(int argc, char** argv)
     HAL_CurrentSensor_init();
    
     HAL_SlaveChips_init();
-    // HAL_Watchdog_init();
+
+    #ifndef DISABLE_WATCHDOG
+        HAL_Watchdog_init();
+    #endif
 
     // initialize all app stuff
     CAN_init();
-
     
     CellBalancer_init();
     ChargeMonitor_init();
@@ -209,6 +259,7 @@ int main(int argc, char** argv)
     SOCestimator_init();
     FaultManager_init();
     StatusLed_init();
+    TaskWatchdog_init();
     TempConverter_init(NTCALUG01T_LUT, NTCALUG01T_LUT_LEN, NTCALUG01T_OFFSET, DIVIDER_OHM);
 
 
@@ -249,7 +300,6 @@ int main(int argc, char** argv)
         TASK_1kHz_PRIORITY,
         NULL);
 
-
     xTaskCreate(task_can_rx, 
         TASK_CAN_RX_NAME, 
         TASK_CAN_RX_STACK_SIZE_B,
@@ -264,8 +314,14 @@ int main(int argc, char** argv)
         TASK_CAN_TX_PRIORITY,
         NULL);
 
-
-   
+    xTaskCreate(watchdog_task,
+        WATCHDOG_TASK_NAME,
+        WATCHDOG_TASK_STACK_SIZE,
+        NULL,
+        WATCHDOG_TASK_PRIORITY,
+        NULL);
+    
+    
     vTaskStartScheduler();
 
     // if we get here, ope

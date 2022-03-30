@@ -165,6 +165,7 @@ void BmsSimClient_io(void)
 	BmsData bmsdata = BmsData_init_zero;
 	bmsdata.which_data = BmsData_bmsOut_tag;
 	bmsdata.data.bmsOut = BmsOut_state;
+	BmsOut_state.watchdog_pet = false;
 
 	
 	Mailbox_add_to_outbox(&bmsdata);

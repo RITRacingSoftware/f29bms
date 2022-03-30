@@ -1,5 +1,11 @@
 #include "HAL_Uart.h"
 
+//Temporary fix to get it to build
+#include "FreeRTOS.h"
+#include "semphr.h"
+SemaphoreHandle_t can_message_recieved_semaphore;
+SemaphoreHandle_t can_message_transmit_semaphore;
+
 int main(){
     HAL_Uart_init();
     int8_t print_buffer[10];

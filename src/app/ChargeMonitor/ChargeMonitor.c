@@ -289,3 +289,4 @@ bool ChargeMonitor_is_balancing_allowed(void)
 {
     return sm_outputs.allow_balancing;
 }
+

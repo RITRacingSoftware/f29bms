@@ -34,6 +34,7 @@ message BmsOut {
     bool status_led = 1;
     bool charge_enable = 2;
     bool shutdown_line = 3;
+    bool watchdog_pet = 4;
 }
 
 // messages that can be sent either direction

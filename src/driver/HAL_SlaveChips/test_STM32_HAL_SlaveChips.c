@@ -2,6 +2,12 @@
 #include "HAL_Clock.h"
 #include "stm32f0xx_gpio.h"
 
+//Temporary fix to get it to build
+#include "FreeRTOS.h"
+#include "semphr.h"
+SemaphoreHandle_t can_message_recieved_semaphore;
+SemaphoreHandle_t can_message_transmit_semaphore;
+
 #define HSI48_SOURCE 0x0C
 
 

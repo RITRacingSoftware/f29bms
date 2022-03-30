@@ -15,6 +15,11 @@
 #include "StatusLed.h"
 #include "TempConverter.h"
 #include "TempModel.h"
+#include "HAL_Watchdog.h"
+#include "CurrentLimiter.h"
+
+#include <stdio.h>
+#include "HAL_Uart.h"
 
 // the global battery model!
 static BatteryModel_t battery_model;
@@ -46,7 +51,7 @@ void Periodic_1Hz(void)
     // Request or reject charging
     ChargeMonitor_1Hz(&battery_model);
 
-    CAN_1Hz();
+    CAN_1Hz(&battery_model, &temp_model);
 }
 
 void Periodic_10Hz(void)
@@ -55,10 +60,10 @@ void Periodic_10Hz(void)
     SlaveInterface_read_cell_info(&battery_model);
     SlaveInterface_read_temperature_info(&temp_model);
 
-    // convert from thermistor voltage probe readings to temperatures
+    // // convert from thermistor voltage probe readings to temperatures
     TempConverter_convert(&temp_model);
    
-    // check the new slave board readings for errors
+    // // check the new slave board readings for errors
     PackMonitor_validate_battery_model_10Hz(&battery_model);
     PackMonitor_validate_temp_model_10Hz(&temp_model);
 
@@ -73,6 +78,9 @@ void Periodic_10Hz(void)
 
     // update the bounds on State of Charge based on average pack voltage
     SOCestimator_voltage_threshold_update_10Hz(&battery_model, &temp_model);
+
+    // update the discharge current limit
+    CurrentLimiter_10Hz(&battery_model);
 
     // statuse LED blink algorithm iteration
     StatusLed_10Hz();

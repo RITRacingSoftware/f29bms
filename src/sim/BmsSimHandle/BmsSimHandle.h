@@ -51,6 +51,8 @@ bool BmsSim_get_status_led(void);
 
 bool BmsSim_get_shutdown_line(void);
 
+bool BmsSim_get_watchdog_pet(void);
+
 bool BmsSim_get_charge_enable(void);
 
 void BmsSim_set_charger_available(bool charger_available);

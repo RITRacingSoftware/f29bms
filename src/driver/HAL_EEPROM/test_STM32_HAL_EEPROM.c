@@ -1,5 +1,12 @@
 #include "HAL_EEPROM.h"
 #include "stm32f0xx_flash.h"
+
+//Temporary fix to get it to build
+#include "FreeRTOS.h"
+#include "semphr.h"
+SemaphoreHandle_t can_message_recieved_semaphore;
+SemaphoreHandle_t can_message_transmit_semaphore;
+
 #define CONFIG_FLASH_PAGE 0x8040000
 FLASH_Status write_boot_byte(uint8_t* addr, uint8_t byte_to_write)
 {

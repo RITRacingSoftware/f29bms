@@ -69,6 +69,14 @@
 #define CURRENT_SENSOR_PIN GPIO_Pin_1
 
 /**
+ * Current Limiting
+ */
+#define CURRENT_LIMIT_THRESHOLD_V 3.2 // the voltage at which the active current limiting will reduce the current limit
+#define ACTIVE_CURRENT_CORRECTION_DECREASE_VALUE 10 // the amount to decrease current limit when voltage drops below threshold
+#define MIN_ALLOWED_CURRENT_LIMIT 50 //Need to determine correct value, need to change value in current_limiting_test.py as well
+#define MAX_ALLOWED_CURRENT_LIMIT 230 //Need to get right value, need to change value in current_limiting_test.py as well
+
+/**
  * Faults
  */
 // any bits set in this won't get set in the fault vector
@@ -137,5 +145,10 @@ static float temp_lut_V[NUM_TEMP_RANGES][3] =
 
 // how long a temperature fault condition must be present to trigger a fault
 #define TEMPERATURE_FAULT_HYSTERESIS_MS 1000
+
+/**
+ * CAN
+ */
+#define CAN_QUEUE_LEN 100
 
 #endif // F29BMSCONFIG_H

@@ -168,6 +168,7 @@ void SOCestimator_voltage_threshold_update_10Hz(BatteryModel_t* battery_model, T
     if (incr_to_limit(&save_counter_ms, SOC_SAVE_PERIOD_MS, 100))
     {
         SOCestimator_save_soc();
+        save_counter_ms = 0; //Reset Counter
     }
 }
 

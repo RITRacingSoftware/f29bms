@@ -44,6 +44,3 @@ def test_balancing(sim):
     assert sim.get_charge_enable() == True
 
     assert sim.read_drain_state(0) == True, "Cell not drained when appropriate"
-
-    
-

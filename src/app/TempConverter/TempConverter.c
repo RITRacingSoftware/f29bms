@@ -118,3 +118,4 @@ void TempConverter_convert(TempModel_t* tm)
         tm->temps_C[i] = 1.0/(TEMP_A1 + TEMP_B1*ln_rt_r25 + TEMP_C1*SQ(ln_rt_r25) + TEMP_D1 * CUBE(ln_rt_r25)) -273.15;
     }
 }
+

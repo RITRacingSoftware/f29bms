@@ -1,1 +1,1 @@
-scons unit-tests sim sim-interface memchecks open-loop
+scons test-apps unit-tests sim sim-interface memchecks open-loop

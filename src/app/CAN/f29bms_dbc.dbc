@@ -319,6 +319,19 @@ BO_ 951 BmsRef: 8 Bms
  SG_ BmsRef_ref10 m1: 37|9@1+ (0.01,0) [0|5.12] "V" Vector__XXX
  SG_ BmsRef_ref11 m1: 46|9@1+ (0.01,0) [0|5.12] "V" Vector__XXX
 
+BO_ 187 WatchdogLastBreath: 8 Bms
+ SG_ WatchdogLastBreath_1HZ_TASK_EXPIRED : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WatchdogLastBreath_10HZ_TASK_EXPIRED : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WatchdogLastBreath_1KHZ_TASK_EXPIRED : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WatchdogLastBreath_CAN_TASK_EXPIRED : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 514 BmsCurrentLimit: 8 Bms
+ SG_ BmsMaxDischargeCurrent : 0|16@1+ (1,0) [0|65536] "A" Vector__XXX
+ SG_ BmsMaxChargeCurrent : 16|16@1+ (1,0) [0|65536] "A" Vector__XXX
+
+BO_ 515 ActiveCorrectionCurrentLimitAlert: 8 Bms
+ SG_ CountActiveCorrectionCount : 0|16@1+ (1,0) [0|65536] "" Vector__XXX
+
 VAL_ 701 BmsFaultAlert_code 0 "FaultCode_SLAVE_COMM_CELLS" 1 "FaultCode_SLAVE_COMM_TEMPS" 2 "FaultCode_SLAVE_COMM_DRAIN_REQUEST" 3 "FaultCode_CURRENT_SENSOR_COMM" 4 "FaultCode_OVER_CURRENT" 5 "FaultCode_CELL_VOLTAGE_IRRATIONAL" 6 "FaultCode_CELL_VOLTAGE_DIFF" 7 "Faultcode_OUT_OF_JUICE" 8 "FaultCode_TEMPERATURE_IRRATIONAL" 9 "FaultCode_OVER_TEMP" 10 "FaultCode_DRAIN_FAILURE";
 VAL_ 600 BmsStatus_ChargeState 0 "ChargeState_DISCONNECTED" 1 "ChargeState_CONNECTED_COMPLETE" 2 "ChargeState_CONNECTED_BALANCING" 3 "ChargeState_CONNECTED_CHARGING" 4 "ChargeState_CONNECTED_BALANCE_SENSING";
 VAL_ 950 BmsHardFaultIndicator_task 0 "unknown" 1 "task_1Hz" 2 "task_10Hz" 3 "task_1kHz" 4 "can_rx_task";

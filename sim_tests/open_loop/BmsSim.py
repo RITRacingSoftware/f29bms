@@ -56,6 +56,9 @@ class BmsSim:
     
     def get_shutdown_line(self):
         return self.clib.BmsSim_get_shutdown_line()
+        
+    def get_watchdog_pet(self):
+        return self.clib.BmsSim_get_watchdog_pet()
     
     def get_charge_enable(self):
         return self.clib.BmsSim_get_charge_enable()

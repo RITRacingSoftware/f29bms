@@ -246,6 +246,7 @@ void BmsSim_tick(void)
         {
             case BmsData_bmsOut_tag:
                 last_BmsOut = incoming_msg.data.bmsOut;
+
                 break;
             
             case BmsData_cell_list_tag:
@@ -326,6 +327,11 @@ bool BmsSim_get_status_led(void)
 bool BmsSim_get_shutdown_line(void)
 {
     return last_BmsOut.shutdown_line;
+}
+
+bool BmsSim_get_watchdog_pet(void)
+{
+    return last_BmsOut.watchdog_pet;
 }
 
 bool BmsSim_get_charge_enable(void)

@@ -358,6 +358,20 @@ Default(unit_test_results)
 Instructions for compiling driver test applications.
 """
 
+stm32_freertos_source = []
+stm32_freertos_source += Glob(FREERTOS_DIR.Dir('Source').abspath + '/*.c')
+stm32_freertos_source.append(FREERTOS_DIR.File('Source/portable/MemMang/heap_3.c'))
+stm32_freertos_source.append(FREERTOS_DIR.File('Source/portable/ThirdParty/GCC/ARM_CM0/port.c'))
+
+
+stm32_freertos_objs = []
+for source_file in stm32_freertos_source:
+    stm32_freertos_objs += stm32_comp_env.Object(source=source_file, target=source_file.abspath + '.stm32.o')
+
+# Depends(freertos_objs, generated_dbc_source)
+
+# stm32_freertos_objs += stm32_comp_env.Object(source=SRC_DIR.File('main.c'), target=SRC_DIR.File('main.stm32.o'))
+
 test_apps = {}
 for module_name, module_dir in driver_modules:
     # Compilation of test application main
@@ -370,10 +384,15 @@ for module_name, module_dir in driver_modules:
         objs.append(driver_obj)
     for common_obj in stm32_common_objects.values():
         objs.append(common_obj)
+    for app_obj in stm32_app_objects.values():
+        objs.append(app_obj)
     objs.extend(stm32_comp_env.Object(DRIVER_DIR.File('test_app_startup.s')))
 
     objs.extend(stm32_lib_objs)
     objs.append(stm32_dbc_gen_obj)
+    objs.append(stm32_freertos_objs)
+    # objs.append(stm32_app_objects.values())
+
 
     # stm32 elf generation
     stm32_elf = stm32_comp_env.BuildElf(
@@ -528,17 +547,17 @@ The whole reason we're here: Instructions for building the f29bms binary.
 That is, the binary that gets loaded onto the BMS hardware itself.
 """
 
-stm32_freertos_source = []
-stm32_freertos_source += Glob(FREERTOS_DIR.Dir('Source').abspath + '/*.c')
-stm32_freertos_source.append(FREERTOS_DIR.File('Source/portable/MemMang/heap_3.c'))
-stm32_freertos_source.append(FREERTOS_DIR.File('Source/portable/ThirdParty/GCC/ARM_CM0/port.c'))
+# stm32_freertos_source = []
+# stm32_freertos_source += Glob(FREERTOS_DIR.Dir('Source').abspath + '/*.c')
+# stm32_freertos_source.append(FREERTOS_DIR.File('Source/portable/MemMang/heap_3.c'))
+# stm32_freertos_source.append(FREERTOS_DIR.File('Source/portable/ThirdParty/GCC/ARM_CM0/port.c'))
 
 
-stm32_freertos_objs = []
-for source_file in stm32_freertos_source:
-    stm32_freertos_objs += stm32_comp_env.Object(source=source_file, target=source_file.abspath + '.stm32.o')
+# stm32_freertos_objs = []
+# for source_file in stm32_freertos_source:
+#     stm32_freertos_objs += stm32_comp_env.Object(source=source_file, target=source_file.abspath + '.stm32.o')
 
-#Depends(freertos_objs, generated_dbc_source)
+# #Depends(freertos_objs, generated_dbc_source)
 
 stm32_freertos_objs += stm32_comp_env.Object(source=SRC_DIR.File('main.c'), target=SRC_DIR.File('main.stm32.o'))
 f29bms_startup_obj = stm32_comp_env.Object(LIBS_DIR.File('stm32libs/CMSIS/Device/ST/STM32F0xx/Source/Templates/gcc_ride7/startup_stm32f0xx.s'))

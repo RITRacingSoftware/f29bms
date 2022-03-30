@@ -45,6 +45,9 @@ typedef struct
     struct f29bms_dbc_bms_charge_request_t bms_charge_request;
     struct f29bms_dbc_bms_hard_fault_indicator_t bms_hard_fault_indicator;
     struct f29bms_dbc_bms_ref_t bms_ref;
+    struct f29bms_dbc_watchdog_last_breath_t bms_watchdog_last_breath;
+    struct f29bms_dbc_bms_current_limit_t bms_current_limit;
+    struct f29bms_dbc_active_correction_current_limit_alert_t bms_current_limit_correction_count;
 } CAN_BUS;
 
 extern CAN_BUS can_bus;
@@ -81,17 +84,13 @@ void CAN_reset_error(void);
  */
 void CAN_1kHz(void);
 void CAN_10Hz(BatteryModel_t* bm, TempModel_t* tm);
-void CAN_1Hz(void);
+void CAN_1Hz(BatteryModel_t* bm, TempModel_t* tm);
 
 /**
  * Processes recevied can messages
  */
 void CAN_process_recieved_messages(void);
 
-/**
- * Processes recevied can messages
- */
-void CAN_process_recieved_messages(void);
 
 /**
  * Fills empty transmit mailboxes with CAN messages from the queue
