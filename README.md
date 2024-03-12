@@ -10,7 +10,7 @@ This code accomplishes the following responsibilities:
 ## Installation
 We utilize Docker to build anywhere. Install it from [docker.com](https://www.docker.com/).
 
-If you would like to build on Windows, there are additional steps, see [Docker's windows instructions](https://docs.docker.com/docker-for-windows/install-windows-home/)
+If you would like to build on Windows, there are additional steps, see [Docker's windows instructions](https://docs.docker.com/docker-for-windows/install-windows-home/) and [here](#Windows)
 
 ## Building Everything/Running all tests
 Once docker is installed, use `docker-build.sh` to build the docker image.
@@ -68,3 +68,29 @@ Each C module has its own folder where its header (.h), source (.c), and test so
 Application logic is implemented in hardware agnostic application modules under src/app. The test source for these modules contains unit tests that run automatically using Unity/CMock.
 
 Driver code is implemented in hardware specific driver modules under src/driver. There are two source files for each driver module: SIM_HAL_\<module name>.c, drivers for interfacing with a simulation running on linux, and STM32_HAL_\<module name>.c, drivers for the stm32 microcontroller. The test source for driver modules is a program made for running on an stm32 evaluation board for testing the drivers.
+
+## Windows 
+
+Follow guide above on installing Docker 
+
+
+With powershell:
+- CD to directory of f29bms (dir with the dockerfile)
+- run ``` docker build -t bms-container .```  you can name this whatever
+- when done run ``` docker run -it bms-container .```
+- To run scripts, make sure you are in the shell for the container and run  ``` bash something.sh``` (eg. build.sh)
+
+
+ To get the bin file to flash on to the BMS: easiest way is open up docker desktop, find the container and under the files tab, navigate to /f29bms/bin, and rightclick save
+
+Additional reading/help:
+[https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers) 
+
+With VScode:
+- Install Docker, WSL etc
+- Clone this project and open that folder 
+- Hit the >< looking thing bottom left corner of VS code and connect to WSL
+- First time run: click the >< again, select "new dev container"
+- Select and create C++ container
+- idk this didn't work just use powershell lol
+      
